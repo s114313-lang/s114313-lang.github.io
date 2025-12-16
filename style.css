@@ -5,7 +5,7 @@ body {
     min-height: 100vh;
     margin: 0;
     font-family: '微軟正黑體', Arial, sans-serif;
-    background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+    background-color: #f4f4f9; /* 淺灰色背景 */
     color: #333;
 }
 
@@ -13,16 +13,16 @@ body {
     text-align: center;
     padding: 30px 40px;
     background: #ffffff;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
     max-width: 450px;
 }
 
 h1 {
-    color: #004d99;
+    color: #333;
 }
 
-/* --- 輸入區樣式 (保持不變) --- */
+/* --- 輸入區樣式 --- */
 .input-area {
     margin-bottom: 20px;
 }
@@ -39,7 +39,7 @@ h1 {
 #updateOptionsButton {
     padding: 8px 15px;
     font-size: 16px;
-    background-color: #f39c12;
+    background-color: #5cb85c;
     color: white;
     border: none;
     border-radius: 5px;
@@ -48,11 +48,11 @@ h1 {
 }
 
 #updateOptionsButton:hover {
-    background-color: #e67e22;
+    background-color: #4cae4c;
 }
 
 
-/* --- 轉盤樣式：核心修改部分 --- */
+/* --- 轉盤樣式：乾淨的扇形 --- */
 
 .wheel-container {
     position: relative;
@@ -69,14 +69,9 @@ h1 {
     overflow: hidden;
     transition: transform 5s cubic-bezier(0.25, 0.1, 0, 1);
     
-    /* 模擬圖片中的黃色外圈和光暈 */
-    /* 1. 內部白色圓盤邊緣 */
-    border: 10px solid #ffffff; 
-    /* 2. 外部黃色發光邊框 */
-    box-shadow: 
-        0 0 10px rgba(255, 165, 0, 0.5), /* 輕微光暈 */
-        0 0 0 8px #FFD700, /* 較窄的黃色外圈 */
-        0 0 0 20px #FFD700; /* 最外層寬黃色外圈 */
+    /* 轉盤外框 */
+    border: 3px solid #666; 
+    box-shadow: none;
 }
 
 /* 扇區基礎樣式 */
@@ -101,86 +96,45 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding-top: 25px; /* 增加 padding 讓文字遠離中心 */
-    font-size: 18px;
-    font-weight: 900; /* 極粗字體 */
-    color: #000000; /* 黑色文字 */
-    text-shadow: 1px 1px 0px #ffffff, -1px -1px 0px #ffffff, 1px -1px 0px #ffffff, -1px 1px 0px #ffffff; /* 模擬白色描邊 */
+    padding-top: 15px; 
+    font-size: 16px;
+    font-weight: bold;
+    color: #333; 
+    text-shadow: none; 
     transform: rotate(90deg) translate(-50%, 0) rotate(var(--angle)); 
-}
-
-/* --- 裝飾與中心圓盤 --- */
-
-/* 1. 模擬外圈的白色圓點裝飾 (使用 wheel-container 的 ::after) */
-.wheel-container::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    /* 創建多個白色圓點，使用重複的徑向漸變 */
-    background: radial-gradient(circle at 100% 50%, white 5px, transparent 6px), 
-                repeating-conic-gradient(#FFD700 0deg, #FFD700 calc(360deg / 18), transparent 0deg, transparent calc(360deg / 18));
-    width: 320px; /* 與輪盤相同尺寸 */
-    height: 320px;
-    border-radius: 50%;
-    z-index: 5; /* 在指針下方 */
-    /* 讓漸變只在邊緣顯示，需進行遮罩處理，這裡我們用 box-shadow 替代 */
-    box-shadow: 0 0 0 10px #FFD700, /* 最外層黃邊 */
-                0 0 0 15px #ffffff; /* 內白邊 */
-}
-
-
-/* 2. 模擬中間的橙色圓盤 */
-#wheel::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100px; /* 中心圓盤大小 */
-    height: 100px;
-    background-color: #FF8C00; /* 橙色 */
-    border-radius: 50%;
-    border: 5px solid #FFD700; /* 黃色邊框 */
-    /* 添加內部裝飾星號，這裡簡化為陰影/光暈 */
-    box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.7), /* 白色星光內光暈 */
-                inset 0 0 10px rgba(0, 0, 0, 0.3); /* 輕微內陰影 */
-    z-index: 2;
 }
 
 /* --- 指針樣式 --- */
 .pointer {
     position: absolute;
-    top: -10px; /* 略微抬高 */
+    top: -5px; 
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     height: 0;
-    border-left: 18px solid transparent; /* 加寬指針 */
-    border-right: 18px solid transparent;
-    border-top: 35px solid #e74c3c; /* 紅色三角指針 */
+    border-left: 15px solid transparent; 
+    border-right: 15px solid transparent;
+    border-top: 30px solid #d9534f; /* 紅色指針 */
     z-index: 10;
 }
 
-
-/* --- 按鈕與結果 (保持不變) --- */
+/* --- 按鈕與結果 --- */
 
 #spinButton {
     padding: 12px 25px;
     font-size: 18px;
     cursor: pointer;
-    background-color: #2ecc71;
+    background-color: #007bff; 
     color: white;
     border: none;
-    border-radius: 25px;
+    border-radius: 5px;
     margin-top: 25px;
     transition: background-color 0.3s;
     font-weight: bold;
 }
 
 #spinButton:hover:not(:disabled) {
-    background-color: #27ae60;
+    background-color: #0056b3;
 }
 
 #spinButton:disabled {
@@ -192,5 +146,5 @@ h1 {
     font-size: 1.4em;
     margin-top: 20px;
     font-weight: bold;
-    color: #c0392b;
+    color: #333;
 }
