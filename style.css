@@ -75,6 +75,83 @@ h1 {
 }
 
 /* 扇區基礎樣式 */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    font-family: '微軟正黑體', Arial, sans-serif;
+    background-color: #f4f4f9; /* 淺灰色背景 */
+    color: #333;
+}
+
+.container {
+    text-align: center;
+    padding: 30px 40px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    max-width: 450px;
+}
+
+h1 {
+    color: #333;
+}
+
+/* --- 輸入區樣式 --- */
+.input-area {
+    margin-bottom: 20px;
+}
+
+#optionInput {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    resize: vertical;
+}
+
+#updateOptionsButton {
+    padding: 8px 15px;
+    font-size: 16px;
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#updateOptionsButton:hover {
+    background-color: #4cae4c;
+}
+
+
+/* --- 轉盤樣式：乾淨的扇形 --- */
+
+.wheel-container {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    margin: 40px auto;
+}
+
+#wheel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    transition: transform 5s cubic-bezier(0.25, 0.1, 0, 1);
+    
+    /* 轉盤外框 */
+    border: 3px solid #666; 
+    box-shadow: none;
+}
+
+/* 扇區基礎樣式 */
 .segment {
     position: absolute;
     width: 50%;
@@ -83,6 +160,65 @@ h1 {
     left: 50%;
     transform-origin: 0% 100%;
     z-index: 1; 
+}
+
+/* 扇區文字樣式 */
+.segment::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(var(--angle));
+    transform-origin: 0 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    white-space: nowrap;
+}
+
+/* --- 指針樣式 --- */
+.pointer {
+    position: absolute;
+    top: -5px; 
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent; 
+    border-right: 15px solid transparent;
+    border-top: 30px solid #d9534f; /* 紅色指針 */
+    z-index: 10;
+}
+
+/* --- 按鈕與結果 --- */
+
+#spinButton {
+    padding: 12px 25px;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: #007bff; 
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-top: 25px;
+    transition: background-color 0.3s;
+    font-weight: bold;
+}
+
+#spinButton:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+#spinButton:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+}
+
+#result {
+    font-size: 1.4em;
+    margin-top: 20px;
+    font-weight: bold;
+    color: #333;
 }
 
 /* 扇區文字樣式 */
