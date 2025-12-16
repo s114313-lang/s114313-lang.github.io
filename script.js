@@ -9,10 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let numSegments = 0;
     let segmentAngle = 0;
 
-    // 定義一組漂亮的顏色，用於循環分配給每個選項
+    // **【重要修改】定義新的顏色列表：白、淺黃交替**
     const availableColors = [
-        "#FF5733", "#33FF57", "#3357FF", "#FFBB33", 
-        "#FF33A1", "#33FFF6", "#A133FF", "#FF9F33"
+        "#FFFFFF", // 白色
+        "#FFF7E0"  // 淺黃色 (可選：#FFECB3 或 #FFE0B2 獲得更深的淺黃色)
     ];
 
     /**
@@ -23,15 +23,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const rawInput = optionInput.value;
         currentChoices = rawInput.split('\n')
                                  .map(item => item.trim())
-                                 .filter(item => item.length > 0); // 過濾掉空白項目
+                                 .filter(item => item.length > 0); 
 
         numSegments = currentChoices.length;
         
-        // 檢查選項數量
         if (numSegments < 2) {
             resultDisplay.textContent = "請至少輸入兩個選項！";
             spinButton.disabled = true;
-            wheel.innerHTML = ''; // 清空轉盤
+            wheel.innerHTML = ''; 
             return;
         }
 
@@ -45,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const segment = document.createElement('div');
             segment.classList.add('segment');
             
-            // 循環使用顏色
+            // 根據索引循環使用顏色，實現白/淺黃交替
             const color = availableColors[index % availableColors.length];
             segment.style.backgroundColor = color;
 
@@ -69,43 +68,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /**
-     * 處理轉動邏輯
+     * 處理轉動邏輯 (此部分保持不變)
      */
     function spinWheel() {
         if (spinButton.disabled || numSegments < 2) return;
         
         spinButton.disabled = true;
-        updateButton.disabled = true; // 轉動時禁用更新按鈕
+        updateButton.disabled = true; 
         resultDisplay.textContent = "轉盤高速旋轉中...";
         
-        // 隨機選擇一個結果的索引
         const winningIndex = Math.floor(Math.random() * numSegments);
         const winningChoice = currentChoices[winningIndex];
 
-        // 計算目標停止角度
         const baseRevolutions = 6; 
         const targetCenterAngle = winningIndex * segmentAngle + segmentAngle / 2;
         const idealStopAngle = 360 - targetCenterAngle;
         const randomOffset = Math.random() * (segmentAngle * 0.8) - (segmentAngle * 0.4);
         const finalRotation = (baseRevolutions * 360) + idealStopAngle + randomOffset;
 
-        // 應用旋轉動畫
         wheel.style.transition = 'transform 5s cubic-bezier(0.25, 0.1, 0, 1)';
         wheel.style.transform = `rotate(${finalRotation}deg)`;
 
-        // 等待旋轉完成 (5 秒後執行)
         setTimeout(() => {
             spinButton.disabled = false;
-            updateButton.disabled = false; // 重新啟用更新按鈕
-            
-            // 顯示選擇的結果
+            updateButton.disabled = false;
             resultDisplay.textContent = `🎯 結果是：${winningChoice}！`;
-            
-            // 重置以便下次旋轉
             wheel.style.transition = 'none';
             const visualRotation = finalRotation % 360;
             wheel.style.transform = `rotate(${visualRotation}deg)`;
-            
         }, 5000); 
     }
     
@@ -113,6 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
     spinButton.addEventListener('click', spinWheel);
     updateButton.addEventListener('click', updateWheel);
     
-    // 初始化時先調用一次，根據預設的 textarea 內容生成轉盤
+    // 初始化時先調用一次
     updateWheel();
 });
