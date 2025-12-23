@@ -1,114 +1,92 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const wheel = document.getElementById('wheel');
-    const spinButton = document.getElementById('spinButton');
-    const resultDisplay = document.getElementById('result');
-    const optionInput = document.getElementById('optionInput');
-    const updateButton = document.getElementById('updateOptionsButton');
+const wheel = document.getElementById('wheel');
+const optionInput = document.getElementById('optionInput');
+const labelsContainer = document.getElementById('labelsContainer');
+const resultText = document.getElementById('resultText');
+const spinBtn = document.getElementById('spinBtn');
 
-    let currentChoices = [];
-    let numSegments = 0;
-    let segmentAngle = 0;
+let currentRotation = 0;
+let options = [];
 
-    // 定義顏色：白、淺黃交替
-    const availableColors = [
-        "#FFFFFF", // 白色
-        "#FFF7E0"  // 淺黃色
-    ];
+/**
+ * 更新轉盤外觀與文字
+ */
+function updateWheel() {
+    const text = optionInput.value.trim();
+    options = text.split('\n').filter(opt => opt.trim() !== '');
 
-    /**
-     * 從輸入框讀取選項並更新轉盤結構
-     */
-    function updateWheel() {
-        const rawInput = optionInput.value;
-        currentChoices = rawInput.split('\n')
-                                 .map(item => item.trim())
-                                 .filter(item => item.length > 0); 
-
-        numSegments = currentChoices.length;
-        
-        if (numSegments < 2) {
-            resultDisplay.textContent = "請至少輸入兩個選項！";
-            spinButton.disabled = true;
-            wheel.innerHTML = ''; 
-            return;
-        }
-
-        segmentAngle = 360 / numSegments;
-        
-        // 清空現有的轉盤
-        wheel.innerHTML = ''; 
-        
-        // 重新建立轉盤扇區
-        currentChoices.forEach((label, index) => {
-            const segment = document.createElement('div');
-            segment.classList.add('segment');
-            
-            // 根據索引循環使用顏色，實現白/淺黃交替
-            const color = availableColors[index % availableColors.length];
-            segment.style.backgroundColor = color;
-
-            // 設置旋轉角度和文字
-            const rotateAngle = index * segmentAngle;
-            segment.style.transform = `rotate(${rotateAngle}deg) skewY(${90 - segmentAngle}deg)`;
-            
-            segment.setAttribute('data-label', label);
-            const textRotateAngle = rotateAngle + segmentAngle / 2;
-            segment.style.setProperty('--angle', `${textRotateAngle}deg`);
-
-            wheel.appendChild(segment);
-        });
-        
-        resultDisplay.textContent = `轉盤已更新，共 ${numSegments} 個選項。`;
-        spinButton.disabled = false;
-        
-        // 確保轉盤在更新後重置到 0 度 (視覺上靜止)
-        wheel.style.transform = `rotate(0deg)`;
-        wheel.style.transition = 'none';
+    if (options.length < 2) {
+        alert("請輸入至少兩個選項！");
+        return;
     }
 
+    const n = options.length;
+    const step = 100 / n;
+    const angleStep = 360 / n;
 
-    /**
-     * 處理轉動邏輯
-     */
-    function spinWheel() {
-        if (spinButton.disabled || numSegments < 2) return;
-        
-        spinButton.disabled = true;
-        updateButton.disabled = true; 
-        resultDisplay.textContent = "轉盤高速旋轉中...";
-        
-        const winningIndex = Math.floor(Math.random() * numSegments);
-        const winningChoice = currentChoices[winningIndex];
-
-        // 計算目標停止角度
-        const baseRevolutions = 6; 
-        const targetCenterAngle = winningIndex * segmentAngle + segmentAngle / 2;
-        const idealStopAngle = 360 - targetCenterAngle;
-        const randomOffset = Math.random() * (segmentAngle * 0.8) - (segmentAngle * 0.4);
-        const finalRotation = (baseRevolutions * 360) + idealStopAngle + randomOffset;
-
-        // 應用旋轉動畫
-        wheel.style.transition = 'transform 5s cubic-bezier(0.25, 0.1, 0, 1)';
-        wheel.style.transform = `rotate(${finalRotation}deg)`;
-
-        // 等待旋轉完成 (5 秒後執行)
-        setTimeout(() => {
-            spinButton.disabled = false;
-            updateButton.disabled = false;
-            resultDisplay.textContent = `🎯 結果是：${winningChoice}！`;
-            
-            // 重置以便下次旋轉
-            wheel.style.transition = 'none';
-            const visualRotation = finalRotation % 360;
-            wheel.style.transform = `rotate(${visualRotation}deg)`;
-            
-        }, 5000); 
+    // 1. 生成背景 conic-gradient (採用鵝黃色與白色交替)
+    let gradientString = "";
+    for (let i = 0; i < n; i++) {
+        const color = (i % 2 === 0) ? 'var(--pale-yellow)' : 'var(--white)';
+        const start = i * step;
+        const end = (i + 1) * step;
+        gradientString += `${color} ${start}% ${end}%${i === n - 1 ? '' : ','}`;
     }
-    
-    // --- 事件監聽器 ---
-    spinButton.addEventListener('click', spinWheel);
-    updateButton.addEventListener('click', updateWheel);
-    
-    // 初始化時先調用一次
-    updateWheel();
-});
+    wheel.style.background = `conic-gradient(${gradientString})`;
+
+    // 2. 生成文字標籤
+    labelsContainer.innerHTML = '';
+    options.forEach((opt, i) => {
+        const labelDiv = document.createElement('div');
+        labelDiv.className = 'wheel-label';
+        // 旋轉文字到扇形中央：旋轉角度為 (i * angleStep) + (半個扇區)
+        // 注意：CSS 座標系中 0度在右側，而我們要配合指針在上方，所以減去 90 度
+        const rotation = (i * angleStep) + (angleStep / 2) - 90;
+        labelDiv.style.transform = `translate(-0%, -50%) rotate(${rotation}deg)`;
+        labelDiv.innerText = opt;
+        labelsContainer.appendChild(labelDiv);
+    });
+
+    resultText.innerText = "轉盤已更新！";
+    // 更新時重置旋轉，避免位置跑掉
+    currentRotation = 0;
+    wheel.style.transform = `rotate(0deg)`;
+}
+
+/**
+ * 旋轉邏輯與結果判定
+ */
+function spinWheel() {
+    if (options.length < 2) return;
+
+    spinBtn.disabled = true;
+    resultText.innerText = "旋轉中...";
+
+    // 隨機增加 5 到 10 圈的旋轉角度 (1800~3600度)
+    const randomExtra = Math.floor(Math.random() * 360);
+    const totalSpin = 1800 + randomExtra; 
+    currentRotation += totalSpin;
+
+    // 執行旋轉動畫
+    wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+    // 動畫時間為 4 秒 (與 CSS transition 一致)
+    setTimeout(() => {
+        spinBtn.disabled = false;
+
+        // 計算中獎結果
+        // 由於我們是旋轉圓盤，指針在上方(固定 270度位置)
+        // 最終停下的角度相對於初始狀態的偏移為：
+        const finalAngle = currentRotation % 360;
+        
+        // 計算指針指向哪個扇區：
+        // 邏輯：(360 - (finalAngle % 360)) 得到相對於指針的偏移
+        const actualPointerAngle = (360 - finalAngle) % 360;
+        const sectorAngle = 360 / options.length;
+        const winningIndex = Math.floor(actualPointerAngle / sectorAngle);
+
+        resultText.innerText = `🎉 結果是：${options[winningIndex]}！`;
+    }, 4000);
+}
+
+// 初始載入
+updateWheel();
