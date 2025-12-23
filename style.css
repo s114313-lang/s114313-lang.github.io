@@ -1,150 +1,115 @@
+:root {
+    --pale-yellow: #FFF4B0; /* 鵝黃色 */
+    --white: #FFFFFF;       /* 白色 */
+}
+
 body {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    font-family: '微軟正黑體', Arial, sans-serif;
-    background-color: #f4f4f9; /* 淺灰色背景 */
-    color: #333;
+    background-color: #f0f0f0;
+    font-family: "Microsoft JhengHei", sans-serif;
 }
 
-.container {
+.main-container {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     text-align: center;
-    padding: 30px 40px;
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-    max-width: 450px;
+    width: 400px;
 }
 
-h1 {
-    color: #333;
-}
-
-/* --- 輸入區樣式 --- */
-.input-area {
-    margin-bottom: 20px;
-}
-
-#optionInput {
+.input-section textarea {
     width: 90%;
     padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    resize: vertical;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
 }
 
-#updateOptionsButton {
-    padding: 8px 15px;
-    font-size: 16px;
-    background-color: #5cb85c;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-#updateOptionsButton:hover {
-    background-color: #4cae4c;
-}
-
-
-/* --- 轉盤樣式：乾淨的扇形 --- */
-
-.wheel-container {
+.wheel-outer {
     position: relative;
-    width: 320px;
-    height: 320px;
-    margin: 40px auto;
+    width: 300px;
+    height: 300px;
+    margin: 30px auto;
 }
 
-#wheel {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    position: relative;
-    overflow: hidden;
-    transition: transform 5s cubic-bezier(0.25, 0.1, 0, 1);
-    
-    /* 轉盤外框 */
-    border: 3px solid #666; 
-    box-shadow: none;
-}
-
-/* 扇區基礎樣式 */
-.segment {
-    position: absolute;
-    width: 50%;
-    height: 50%;
-    top: 0;
-    left: 50%;
-    transform-origin: 0% 100%;
-    z-index: 1; 
-}
-
-/* 扇區文字樣式 */
-.segment::before {
-    content: attr(data-label);
-    position: absolute;
-    top: 5px;
-    left: -100%;
-    width: 200%;
-    height: 200%;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding-top: 15px; 
-    font-size: 16px;
-    font-weight: bold;
-    color: #333; 
-    text-shadow: none; 
-    transform: rotate(90deg) translate(-50%, 0) rotate(var(--angle)); 
-}
-
-/* --- 指針樣式 --- */
+/* 指針樣式 */
 .pointer {
     position: absolute;
-    top: -5px; 
+    top: -20px;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     height: 0;
-    border-left: 15px solid transparent; 
+    border-left: 15px solid transparent;
     border-right: 15px solid transparent;
-    border-top: 30px solid #d9534f; /* 紅色指針 */
+    border-top: 30px solid #ff4d4d;
     z-index: 10;
 }
 
-/* --- 按鈕與結果 --- */
+/* 圓盤主體 */
+#wheel {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    border: 5px solid #333;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
+    /* 採用您提供的平滑動畫曲線 */
+    transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1);
+}
 
-#spinButton {
-    padding: 12px 25px;
-    font-size: 18px;
+/* 文字標籤容器 */
+#labelsContainer {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+/* 單個文字標籤的樣式 */
+.wheel-label {
+    position: absolute;
+    width: 50%;
+    height: 30px;
+    top: 50%;
+    left: 50%;
+    transform-origin: left center;
+    text-align: right;
+    padding-right: 20px;
+    box-sizing: border-box;
+    font-weight: bold;
+    color: #333;
+    pointer-events: none;
+}
+
+button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
     cursor: pointer;
-    background-color: #007bff; 
+    background-color: #4CAF50;
     color: white;
     border: none;
     border-radius: 5px;
-    margin-top: 25px;
-    transition: background-color 0.3s;
-    font-weight: bold;
+    transition: background 0.3s;
 }
 
-#spinButton:hover:not(:disabled) {
-    background-color: #0056b3;
+button:hover {
+    background-color: #45a049;
 }
 
-#spinButton:disabled {
-    background-color: #aaa;
+#spinBtn:disabled {
+    background-color: #ccc;
     cursor: not-allowed;
 }
 
-#result {
-    font-size: 1.4em;
+#resultText {
     margin-top: 20px;
-    font-weight: bold;
-    color: #333;
+    color: #ff4d4d;
+    min-height: 1.2em;
 }
