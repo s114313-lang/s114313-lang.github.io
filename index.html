@@ -1,37 +1,41 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>轉盤</title>
+    <title>自定義旋轉轉盤</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="貓.png">
 </head>
 <body>
-    <div class="container">
-        <h1>轉盤</h1>
-        
-        <div class="input-area">
-            <p>請輸入您的選項，每行一個項目：</p>
-            <textarea id="optionInput" rows="5" cols="40">
+
+    <div class="main-container">
+        <h1>🎡 自定義決策轉盤</h1>
+
+        <div class="input-section">
+            <p>請輸入選項（每行一個）：</p>
+            <textarea id="optionInput" rows="5">
 吃飯
 看電影
 打電動
 運動
 休息
-洗碗
-            </textarea>
-            <button id="updateOptionsButton">更新轉盤</button>
+洗碗</textarea>
+            <button onclick="updateWheel()">更新轉盤內容</button>
         </div>
-        
-        <hr> <div class="wheel-container">
-            <div id="wheel">
-                </div>
+
+        <hr>
+
+        <div class="wheel-outer">
             <div class="pointer"></div>
+            <div id="wheel">
+                <div id="labelsContainer"></div>
+            </div>
         </div>
-        
-        <button id="spinButton" disabled>🚀 開始轉動</button>
-        <p id="result">點擊「更新轉盤」開始設定。</p>
+
+        <div class="action-section">
+            <button id="spinBtn" onclick="spinWheel()">🚀 開始旋轉</button>
+            <h2 id="resultText">準備好試試手氣了嗎？</h2>
+        </div>
     </div>
 
     <script src="script.js"></script>
